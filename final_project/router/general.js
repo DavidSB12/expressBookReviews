@@ -45,6 +45,22 @@ public_users.get('/',function (req, res) {
   res.send(JSON.stringify(books));   
 });
 
+// Get the book list available in the shop with async/await
+public_users.get('/books', async function (req, res) {
+
+  try {
+    const booksAsync = await new Promise((resolve, reject) => {
+      resolve(JSON.stringify(books));
+    });
+  
+    res.send(booksAsync);
+    console.log("Promise for Task 10 resolved");
+  } catch (error) {
+    console.error("Error occurred:", error);
+    res.status(500).send("An error occurred while fetching the book list.");
+  }    
+});
+
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
   let isbn = req.params.isbn;
@@ -52,6 +68,24 @@ public_users.get('/isbn/:isbn',function (req, res) {
 
   if(book) { res.send(book);}
   else { res.send("there is no ISBN that matches the one you provided"); }
+});
+
+// Get book details based on ISBN with async/await
+public_users.get('/isbnAsync/:isbn', async function (req, res) {
+  let isbn = req.params.isbn;
+  let book = books[isbn];
+
+  try {
+      const bookAsync = await new Promise((resolve, reject) => {
+        resolve(JSON.stringify(book));
+      });
+    
+      res.send(bookAsync);
+      console.log("Promise for Task 11 resolved");
+    } catch (error) {
+      console.error("Error occurred:", error);
+      res.status(500).send("An error occurred while fetching the books based on ISBN.");
+    } 
 });
   
 // Get book details based on author
@@ -67,6 +101,29 @@ public_users.get('/author/:author',function (req, res) {
   res.send(JSON.stringify(booksbyAuthor));
 });
 
+// Get book details based on author with async/await
+public_users.get('/authorAsync/:author', async function (req, res) {
+  let author = req.params.author;
+  let booksbyAuthor = [];
+  
+  for (let key in books) {
+    if (books[key].author === author) {
+      booksbyAuthor.push(books[key]);
+    }
+  }
+  try {
+      const booksbyAuthorAsync = await new Promise((resolve, reject) => {
+        resolve(JSON.stringify(booksbyAuthor));
+      });
+    
+      res.send(booksbyAuthorAsync);
+      console.log("Promise for Task 12 resolved");
+    } catch (error) {
+      console.error("Error occurred:", error);
+      res.status(500).send("An error occurred while fetching the books based on author.");
+    }   
+});
+
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
   let title = req.params.title;
@@ -78,6 +135,30 @@ public_users.get('/title/:title',function (req, res) {
     }
   }
   res.send(JSON.stringify(booksbyTitle));
+});
+
+// Get all books based on title with async/await
+public_users.get('/titleAsync/:title', async function (req, res) {
+  let title = req.params.title;
+  let booksbyTitle = [];
+
+  for (let key in books) {
+    if (books[key].title === title) {
+        booksbyTitle.push(books[key]);
+    }
+  }
+  try {
+      const booksbyTitleAsync = await new Promise((resolve, reject) => {
+        resolve(JSON.stringify(booksbyTitle));
+      });
+    
+      res.send(booksbyTitleAsync);
+      console.log("Promise for Task 13 resolved");
+    } catch (error) {
+      console.error("Error occurred:", error);
+      res.status(500).send("An error occurred while fetching the books based on title.");
+    } 
+ 
 });
 
 //  Get book review
